@@ -6,25 +6,31 @@
     <title>EK MYSTERY - Explore the Unknown</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
         header { padding: 40px 20px; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80'); background-size: cover; border-bottom: 3px solid #ff4d4d; margin-bottom: 30px; }
         h1 { color: #ff4d4d; font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; margin: 0; }
+        
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 20px; }
         
-        .card { background: #1e1e1e; border-radius: 12px; padding: 20px; width: 320px; border: 1px solid #333; transition: all 0.3s ease; text-align: left; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-10px); border-color: #ff4d4d; box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2); }
-        h3 { color: #f1c40f; margin-top: 0; font-size: 1.4rem; height: 50px; overflow: hidden; }
-        .card p { color: #bbb; font-size: 0.95rem; line-height: 1.5; height: 60px; overflow: hidden; margin-bottom: 15px; }
+        .card { background: #1e1e1e; border-radius: 12px; width: 340px; border: 1px solid #333; transition: 0.3s; text-align: left; overflow: hidden; display: flex; flex-direction: column; }
+        .card:hover { border-color: #ff4d4d; transform: translateY(-5px); }
         
-        .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .btn { display: block; background: #ff4d4d; color: white; padding: 12px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; transition: 0.3s; border: none; cursor: pointer; }
-        .btn:hover { background: #cc0000; box-shadow: 0 0 15px #ff4d4d; }
-        .blog-btn { background: #2563eb; }
-        .blog-btn:hover { background: #1d4ed8; box-shadow: 0 0 15px #2563eb; }
+        /* Video Player in Card */
+        .video-box iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+        
+        .card-content { padding: 15px; flex-grow: 1; }
+        h3 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.2rem; }
+        .card-content p { color: #bbb; font-size: 0.9rem; height: 50px; overflow: hidden; margin-bottom: 15px; }
 
-        /* Blog Popup */
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px 15px; }
+        .btn { padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 0.85rem; cursor: pointer; border: none; color: white; }
+        
+        .yt-btn { background: #cc0000; } /* YouTube Red */
+        .blog-btn { background: #2563eb; } /* Blog Blue */
+
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1e1e1e; margin: 5% auto; padding: 30px; width: 90%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; text-align: left; position: relative; color: #ddd; }
+        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 85%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; position: relative; text-align: left; line-height: 1.6; }
         .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #ff4d4d; }
     </style>
 </head>
@@ -32,10 +38,10 @@
 
     <header>
         <h1>EK MYSTERY 🎥</h1>
-        <p style="color: #eee; font-style: italic;">Duniya ke ansuljhe rahasya jo aapko hairan kar denge...</p>
+        <p>Ankahee kahaniyan, ansuljhe rahasya...</p>
     </header>
 
-    <div id="loading" style="color:#ff4d4d; font-weight:bold;">Mysteries Load ho rahi hain... 🔍</div>
+    <div id="loading">Duniya ke rahasya khoje ja rahe hain... 🔍</div>
     <div class="container" id="mystery-container"></div>
 
     <div id="blogModal" class="modal">
@@ -52,50 +58,55 @@
             Papa.parse(sheetURL, {
                 download: true,
                 header: true,
-                complete: showData
-            });
-        }
+                complete: function(results) {
+                    const data = results.data;
+                    const container = document.getElementById('mystery-container');
+                    let html = '';
 
-        function showData(results) {
-            const data = results.data;
-            const container = document.getElementById('mystery-container');
-            let html = '';
+                    data.forEach((row, index) => {
+                        if (row.Topic && row.Topic.trim() !== "") {
+                            // YouTube ID nikalna embed ke liye
+                            let vidId = "";
+                            if(row.Link.includes('v=')) vidId = row.Link.split('v=')[1].split('&')[0];
+                            else vidId = row.Link.split('/').pop().split('?')[0];
 
-            data.forEach((row, index) => {
-                if (row.Topic && row.Topic.trim() !== "") {
-                    html += `
-                        <div class="card">
-                            <h3>${row.Topic}</h3>
-                            <p>${row.Description || ''}</p>
-                            <div class="btn-group">
-                                <a href="${row.Link}" class="btn" target="_blank">Watch Full Mystery</a>
-                                ${row.Blog_Text && row.Blog_Text.trim() !== "" ? 
-                                `<button class="btn blog-btn" onclick="openBlog('${index}')">Read Mystery Blog 📖</button>` : ''}
-                            </div>
-                        </div>
-                    `;
-                    window['blog_' + index] = { title: row.Topic, text: row.Blog_Text };
+                            html += `
+                                <div class="card">
+                                    <div class="video-box">
+                                        <iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="card-content">
+                                        <h3>${row.Topic}</h3>
+                                        <p>${row.Description || ''}</p>
+                                    </div>
+                                    <div class="btn-group">
+                                        <a href="${row.Link}" target="_blank" class="btn yt-btn">YouTube 📺</a>
+                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Blog 📖</button>
+                                    </div>
+                                </div>
+                            `;
+                            window['m_blog_' + index] = { t: row.Topic, c: row.Blog_Text || "Iska blog jald hi update hoga..." };
+                        }
+                    });
+                    document.getElementById('loading').style.display = 'none';
+                    container.innerHTML = html;
                 }
             });
-
-            document.getElementById('loading').style.display = 'none';
-            container.innerHTML = html;
         }
 
         function openBlog(id) {
-            const blog = window['blog_' + id];
-            document.getElementById('modal-body').innerHTML = `<h2 style="color:#ff4d4d">${blog.title}</h2><hr style="border:1px solid #333;"><p style="white-space:pre-wrap">${blog.text}</p>`;
+            const b = window['m_blog_' + id];
+            document.getElementById('modal-body').innerHTML = `<h2 style="color:#ff4d4d">${b.t}</h2><hr style="border:0; border-top:1px solid #333; margin:15px 0;"><div style="white-space:pre-wrap;">${b.c}</div>`;
             document.getElementById('blogModal').style.display = "block";
+            document.body.style.overflow = "hidden";
         }
 
         function closeBlog() {
             document.getElementById('blogModal').style.display = "none";
+            document.body.style.overflow = "auto";
         }
 
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('blogModal')) closeBlog();
-        }
-
+        window.onclick = function(e) { if(e.target.className == 'modal') closeBlog(); }
         init();
     </script>
 </body>
