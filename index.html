@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - Explore the Unknown</title>
+    
+    <meta name="google-site-verification" content="t_Nfj05Zl4FLrR6i1NPYKHfrBNAbQN4tnIujfQA6t1U" />
+
+    <title>EK MYSTERY - Explore the Unknown | Duniya ke Ansuljhe Rahasya</title>
+    <meta name="description" content="EK MYSTERY par dekhiye aur padhiye duniya ke sabse bade ansuljhe rahasya, horror stories aur ankahee kahaniyan Hindi mein.">
+    <meta name="keywords" content="EK MYSTERY, Mystery in Hindi, Rahasya, Horror Stories, Unsolved Mysteries, Ghosts, Aliens">
+    <meta name="author" content="EK MYSTERY">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
         header { padding: 40px 20px; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80'); background-size: cover; border-bottom: 3px solid #ff4d4d; margin-bottom: 30px; }
         h1 { color: #ff4d4d; font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; margin: 0; }
         
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 20px; }
         
         .card { background: #1e1e1e; border-radius: 12px; width: 340px; border: 1px solid #333; transition: 0.3s; text-align: left; overflow: hidden; display: flex; flex-direction: column; }
-        .card:hover { border-color: #ff4d4d; transform: translateY(-5px); }
+        .card:hover { border-color: #ff4d4d; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2); }
         
-        /* Thumbnail Style */
+        /* Thumbnail Box */
         .thumbnail-box { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; }
         .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .thumbnail-box:hover img { transform: scale(1.1); }
@@ -23,29 +30,31 @@
         .thumbnail-box:hover .play-icon { color: #ff4d4d; transform: translate(-50%, -50%) scale(1.2); }
         
         .card-content { padding: 15px; flex-grow: 1; }
-        h3 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.2rem; }
+        h3 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.2rem; height: 50px; overflow: hidden; }
         .card-content p { color: #bbb; font-size: 0.9rem; height: 50px; overflow: hidden; margin-bottom: 15px; }
 
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px 15px; }
-        .btn { padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 0.85rem; cursor: pointer; border: none; color: white; }
+        .btn { padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 0.85rem; cursor: pointer; border: none; color: white; transition: 0.3s; }
         
         .yt-btn { background: #cc0000; }
+        .yt-btn:hover { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
         .blog-btn { background: #2563eb; }
+        .blog-btn:hover { background: #1d4ed8; box-shadow: 0 0 10px #2563eb; }
 
         /* Modal for Blog */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 85%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; position: relative; text-align: left; line-height: 1.6; }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #ff4d4d; }
+        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 85%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; position: relative; text-align: left; line-height: 1.7; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 35px; cursor: pointer; color: #ff4d4d; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>EK MYSTERY 🎥</h1>
-        <p>Ankahee kahaniyan, ansuljhe rahasya...</p>
+        <p style="color: #eee; font-style: italic;">Duniya ke ansuljhe rahasya jo aapko hairan kar denge...</p>
     </header>
 
-    <div id="loading">Duniya ke rahasya khoje ja rahe hain... 🔍</div>
+    <div id="loading" style="color:#ff4d4d; font-weight:bold;">Mysteries Load ho rahi hain... 🔍</div>
     <div class="container" id="mystery-container"></div>
 
     <div id="blogModal" class="modal">
@@ -69,19 +78,17 @@
 
                     data.forEach((row, index) => {
                         if (row.Topic && row.Topic.trim() !== "") {
-                            // Extract Video ID to get Thumbnail
                             let vidId = "";
                             if(row.Link.includes('v=')) vidId = row.Link.split('v=')[1].split('&')[0];
                             else if(row.Link.includes('youtu.be/')) vidId = row.Link.split('youtu.be/')[1].split('?')[0];
                             else vidId = row.Link.split('/').pop().split('?')[0];
 
-                            // Thumbnail URL from YouTube
                             const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
 
                             html += `
                                 <div class="card">
                                     <div class="thumbnail-box" onclick="window.open('${row.Link}', '_blank')">
-                                        <img src="${thumbUrl}" alt="Mystery Thumbnail">
+                                        <img src="${thumbUrl}" alt="Thumbnail">
                                         <div class="play-icon">▶</div>
                                     </div>
                                     <div class="card-content">
@@ -105,7 +112,7 @@
 
         function openBlog(id) {
             const b = window['m_blog_' + id];
-            document.getElementById('modal-body').innerHTML = `<h2 style="color:#ff4d4d">${b.t}</h2><hr style="border:0; border-top:1px solid #333; margin:15px 0;"><div style="white-space:pre-wrap;">${b.c}</div>`;
+            document.getElementById('modal-body').innerHTML = `<h2 style="color:#ff4d4d; border-bottom:1px solid #333; padding-bottom:10px;">${b.t}</h2><div style="white-space:pre-wrap; margin-top:20px;">${b.c}</div>`;
             document.getElementById('blogModal').style.display = "block";
             document.body.style.overflow = "hidden";
         }
