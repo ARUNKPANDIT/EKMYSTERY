@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arunkpandit.github.io/EKMYSTERY/index.html
