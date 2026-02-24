@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY</title>
+    <title>EK MYSTERY - Final Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; }
         body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; }
         header { background: #000; padding: 40px 20px; text-align: center; border-bottom: 3px solid var(--red); }
-        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--red); margin: 0; }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--red); margin: 0; letter-spacing: 3px; }
         #google_translate_element { text-align: right; background: #111; padding: 5px; }
         
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-        .card { background: #1a1a1a; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 30px; max-width: 1200px; margin: auto; }
+        .card { background: #161616; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; }
+        .card:hover { border-color: var(--red); transform: translateY(-5px); }
         .thumb { width: 100%; height: 180px; object-fit: cover; cursor: pointer; }
         .card-content { padding: 15px; }
-        h3 { color: var(--gold); margin: 0; font-family: 'Cinzel', serif; }
+        h3 { color: var(--gold); margin: 0; font-family: 'Cinzel', serif; font-size: 1.2rem; }
+        p { color: #bbb; font-size: 0.9rem; line-height: 1.5; margin-top: 10px; height: 3em; overflow: hidden; }
         
         .btn-group { display: flex; gap: 10px; padding: 15px; }
-        .btn { flex: 1; padding: 10px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; cursor: pointer; border: none; }
+        .btn { flex: 1; padding: 10px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 0.8rem; }
         .yt-btn { background: var(--red); color: #fff; }
         .blog-btn { background: #333; color: var(--gold); }
 
-        /* Blog Modal */
-        .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #111; margin: 10% auto; padding: 30px; width: 85%; max-width: 700px; border: 1px solid var(--red); border-radius: 15px; }
-        .close { float: right; font-size: 30px; cursor: pointer; }
-        #modal-body { line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; margin-top: 20px; color: #ddd; }
-        #modal-body h2 { color: var(--gold); border-bottom: 1px solid #444; padding-bottom: 10px; }
+        /* Professional Blog Modal */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; backdrop-filter: blur(5px); }
+        .modal-content { background: #111; margin: 5% auto; padding: 40px; width: 85%; max-width: 800px; border: 1px solid var(--red); border-radius: 15px; position: relative; }
+        .close { position: absolute; right: 20px; top: 10px; font-size: 35px; cursor: pointer; color: #fff; }
+        #modal-body { line-height: 1.9; font-size: 1.15rem; white-space: pre-wrap; color: #ddd; text-align: left; }
+        #modal-body h2 { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2rem; border-bottom: 2px solid var(--red); padding-bottom: 10px; margin-top: 0; }
     </style>
 </head>
 <body>
@@ -38,10 +40,11 @@
 
 <header>
     <h1>EK MYSTERY</h1>
+    <p style="color:#666; font-size: 0.8rem; margin: 5px 0 0;">Duniya Ke Ansuljhe Rahasya</p>
 </header>
 
 <div id="mystery-container" class="container">
-    <p id="msg" style="text-align:center; width:100%;">Data load ho raha hai... (Agar na ho toh refresh karein)</p>
+    <p id="status" style="text-align:center; width:100%; color:var(--gold);">Rahasya Load Ho Rahe Hain...</p>
 </div>
 
 <div id="blogModal" class="modal">
@@ -52,44 +55,64 @@
 </div>
 
 <script>
-    const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOf007qR7Wl14vR3E-w6Wq9Y-G-mKkOfXl_o-pS7h2o02h_k6-eO1XkF-WbT-q09P6mP6/pub?output=csv';
+    // FIXED LINK: pubhtml ko hatakar output=csv wala format use kiya hai
+    const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv';
+    
     let blogs = {};
 
     function init() {
         Papa.parse(sheetURL, {
             download: true,
             header: true,
+            skipEmptyLines: true,
             complete: function(results) {
                 let data = results.data;
                 let html = '';
+                
+                if(!data || data.length === 0) {
+                    document.getElementById('status').innerText = "Data nahi mila! Check Sheet columns.";
+                    return;
+                }
+
                 data.forEach((row, i) => {
                     if (row.Topic) {
-                        let vidId = row.Link.split('v=')[1] || row.Link.split('/').pop();
-                        if(vidId.includes('&')) vidId = vidId.split('&')[0];
+                        // YouTube ID Extraction
+                        let vidId = "";
+                        try {
+                            vidId = row.Link.includes('v=') ? row.Link.split('v=')[1].split('&')[0] : row.Link.split('/').pop().split('?')[0];
+                        } catch(e) { vidId = "dQw4w9WgXcQ"; }
 
-                        blogs[i] = { t: row.Topic, c: row.Blog_Text || row.Description || "Updating..." };
+                        // Storing blog content (Priority: Blog_Text > Blog > Description)
+                        blogs[i] = { 
+                            t: row.Topic, 
+                            c: row.Blog_Text || row.Blog || row.Description || "Iska blog jald hi update kiya jayega..." 
+                        };
 
                         html += `
                             <div class="card">
                                 <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg" class="thumb" onclick="window.open('${row.Link}')">
                                 <div class="card-content">
                                     <h3>${row.Topic}</h3>
-                                    <p style="font-size:0.9rem; color:#aaa;">${row.Description || ''}</p>
+                                    <p>${row.Description || ''}</p>
                                 </div>
                                 <div class="btn-group">
-                                    <a href="${row.Link}" target="_blank" class="btn yt-btn">Video</a>
-                                    <button class="btn blog-btn" onclick="openBlog(${i})">Read Blog</button>
+                                    <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video</a>
+                                    <button class="btn blog-btn" onclick="openBlog(${i})">Read Case File</button>
                                 </div>
                             </div>`;
                     }
                 });
                 document.getElementById('mystery-container').innerHTML = html;
+            },
+            error: function() {
+                document.getElementById('status').innerText = "Connection Error! Google Sheet link check karein.";
             }
         });
     }
 
     function openBlog(i) {
-        document.getElementById('modal-body').innerHTML = `<h2>${blogs[i].t}</h2><div>${blogs[i].c}</div>`;
+        const modalBody = document.getElementById('modal-body');
+        modalBody.innerHTML = `<h2>${blogs[i].t}</h2><div>${blogs[i].c}</div>`;
         document.getElementById('blogModal').style.display = "block";
         document.body.style.overflow = "hidden";
     }
@@ -98,6 +121,8 @@
         document.getElementById('blogModal').style.display = "none";
         document.body.style.overflow = "auto";
     }
+
+    window.onclick = function(e) { if(e.target.className == 'modal') closeModal(); }
 
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'hi'}, 'google_translate_element');
