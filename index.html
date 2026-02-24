@@ -3,69 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="google-site-verification" content="t_Nfj05Zl4FLrR6i1NPYKHfrBNAbQN4tnIujfQA6t1U" />
-
-    <title>EK MYSTERY - Explore the Unknown | Duniya ke Ansuljhe Rahasya</title>
-    <meta name="description" content="EK MYSTERY par dekhiye aur padhiye duniya ke sabse bade ansuljhe rahasya, horror stories aur ankahee kahaniyan Hindi mein.">
-    <meta name="keywords" content="EK MYSTERY, Mystery in Hindi, Rahasya, Horror Stories, Unsolved Mysteries, Ghosts, Aliens">
-    <meta name="author" content="EK MYSTERY">
-
+    <title>EK MYSTERY - Ansuljhe Rahasya</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
-        header { padding: 40px 20px; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80'); background-size: cover; border-bottom: 3px solid #ff4d4d; margin-bottom: 30px; }
-        h1 { color: #ff4d4d; font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; margin: 0; }
+        :root { --dark-red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; }
+        body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; }
+        header { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/black-paper.png'); padding: 40px 20px; text-align: center; border-bottom: 3px solid var(--dark-red); }
+        h1 { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--dark-red); margin: 0; text-shadow: 2px 2px 10px #000; }
         
-        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 20px; }
-        
-        .card { background: #1e1e1e; border-radius: 12px; width: 340px; border: 1px solid #333; transition: 0.3s; text-align: left; overflow: hidden; display: flex; flex-direction: column; }
-        .card:hover { border-color: #ff4d4d; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2); }
-        
-        /* Thumbnail Box */
-        .thumbnail-box { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; }
-        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .thumbnail-box:hover img { transform: scale(1.1); }
-        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: rgba(255, 255, 255, 0.8); transition: 0.3s; }
-        .thumbnail-box:hover .play-icon { color: #ff4d4d; transform: translate(-50%, -50%) scale(1.2); }
-        
-        .card-content { padding: 15px; flex-grow: 1; }
-        h3 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.2rem; height: 50px; overflow: hidden; }
-        .card-content p { color: #bbb; font-size: 0.9rem; height: 50px; overflow: hidden; margin-bottom: 15px; }
+        /* Language Bar Style */
+        #google_translate_element { text-align: right; padding: 10px; background: #111; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px 15px; }
-        .btn { padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 0.85rem; cursor: pointer; border: none; color: white; transition: 0.3s; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 40px; max-width: 1200px; margin: auto; }
+        .card { background: #161616; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; position: relative; }
+        .card:hover { transform: translateY(-10px); border-color: var(--dark-red); box-shadow: 0 10px 30px rgba(139,0,0,0.3); }
         
-        .yt-btn { background: #cc0000; }
-        .yt-btn:hover { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
-        .blog-btn { background: #2563eb; }
-        .blog-btn:hover { background: #1d4ed8; box-shadow: 0 0 10px #2563eb; }
+        .thumbnail-box { position: relative; cursor: pointer; height: 180px; overflow: hidden; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: white; opacity: 0.7; }
 
-        /* Modal for Blog */
+        .card-content { padding: 20px; }
+        h3 { color: var(--gold); margin-top: 0; font-family: 'Cinzel', serif; }
+        p { font-size: 0.95rem; color: #bbb; line-height: 1.5; height: 4.5em; overflow: hidden; }
+
+        .btn-group { display: flex; gap: 10px; padding: 0 20px 20px; }
+        .btn { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; text-align: center; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .yt-btn { background: var(--dark-red); color: white; }
+        .blog-btn { background: #333; color: var(--gold); }
+        .btn:hover { opacity: 0.8; }
+
+        /* Modal / Blog Pop-up */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 85%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; position: relative; text-align: left; line-height: 1.7; }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 35px; cursor: pointer; color: #ff4d4d; }
+        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 80%; max-width: 800px; border-radius: 15px; border: 1px solid var(--dark-red); position: relative; }
+        .close { position: sticky; top: 0; float: right; font-size: 30px; color: #fff; cursor: pointer; }
+        #modal-body { line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
+
+        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--gold); }
     </style>
 </head>
 <body>
 
+    <div id="google_translate_element"></div>
+
     <header>
-        <h1>EK MYSTERY 🎥</h1>
-        <p style="color: #eee; font-style: italic;">Duniya ke ansuljhe rahasya jo aapko hairan kar denge...</p>
+        <h1>EK MYSTERY</h1>
+        <p style="color: #888; letter-spacing: 2px;">DUNIYA KE ANSULJHE RAHASYA</p>
     </header>
 
-    <div id="loading" style="color:#ff4d4d; font-weight:bold;">Mysteries Load ho rahi hain... 🔍</div>
+    <div id="loading">Rahasya khul rahe hain...</div>
     <div class="container" id="mystery-container"></div>
 
     <div id="blogModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeBlog()">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
         </div>
     </div>
 
     <script>
-        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv";
+        // APNI GOOGLE SHEET KA URL YAHAN DALO
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOf007qR7Wl14vR3E-w6Wq9Y-G-mKkOfXl_o-pS7h2o02h_k6-eO1XkF-WbT-q09P6mP6/pub?output=csv';
+
+        let blogData = {};
 
         function init() {
             Papa.parse(sheetURL, {
@@ -84,11 +84,17 @@
                             else vidId = row.Link.split('/').pop().split('?')[0];
 
                             const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
+                            
+                            // Saving blog content
+                            blogData[index] = {
+                                title: row.Topic,
+                                content: row.Blog_Text || row.Description || "Jald hi update hoga..."
+                            };
 
                             html += `
                                 <div class="card">
                                     <div class="thumbnail-box" onclick="window.open('${row.Link}', '_blank')">
-                                        <img src="${thumbUrl}" alt="Thumbnail">
+                                        <img src="${thumbUrl}" alt="Mystery">
                                         <div class="play-icon">▶</div>
                                     </div>
                                     <div class="card-content">
@@ -96,12 +102,11 @@
                                         <p>${row.Description || ''}</p>
                                     </div>
                                     <div class="btn-group">
-                                        <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video 📺</a>
-                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>
+                                        <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video</a>
+                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Read Blog</button>
                                     </div>
                                 </div>
                             `;
-                            window['m_blog_' + index] = { t: row.Topic, c: row.Blog_Text || "Iska blog jald hi update hoga..." };
                         }
                     });
                     document.getElementById('loading').style.display = 'none';
@@ -111,19 +116,36 @@
         }
 
         function openBlog(id) {
-            const b = window['m_blog_' + id];
-            document.getElementById('modal-body').innerHTML = `<h2 style="color:#ff4d4d; border-bottom:1px solid #333; padding-bottom:10px;">${b.t}</h2><div style="white-space:pre-wrap; margin-top:20px;">${b.c}</div>`;
+            const b = blogData[id];
+            document.getElementById('modal-body').innerHTML = `
+                <h2 style="color:var(--gold); font-family:'Cinzel', serif;">${b.title}</h2>
+                <hr style="border:0; border-top:1px solid #444;">
+                <div style="margin-top:20px;">${b.content}</div>
+            `;
             document.getElementById('blogModal').style.display = "block";
             document.body.style.overflow = "hidden";
         }
 
-        function closeBlog() {
+        function closeModal() {
             document.getElementById('blogModal').style.display = "none";
             document.body.style.overflow = "auto";
         }
 
-        window.onclick = function(e) { if(e.target.className == 'modal') closeBlog(); }
-        init();
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('blogModal')) closeModal();
+        }
+
+        // Google Translate Script
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'hi', 
+                includedLanguages: 'en,hi,ru,es,fr,de,ja,zh-CN',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+
+        window.onload = init;
     </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
