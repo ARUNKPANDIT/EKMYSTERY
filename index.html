@@ -7,28 +7,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         :root { --primary-color: #1a73e8; --bg-color: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-color); margin: 0; padding: 20px; color: #333; }
-        header { text-align: center; padding: 25px; background: var(--primary-color); color: white; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-color); margin: 0; padding: 20px; }
+        header { text-align: center; padding: 25px; background: var(--primary-color); color: white; border-radius: 12px; margin-bottom: 30px; }
         #content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; }
         .video-container iframe { width: 100%; aspect-ratio: 16/9; border: none; }
-        .card-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 8px; color: #1f2937; }
-        .card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
-        .blog-btn { background: #34a853; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: auto; }
-        .blog-btn:hover { background: #2d8e47; }
-        /* Modal for Blog */
+        .card-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #1f2937; }
+        .card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        .blog-btn { background: #34a853; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
-        .modal-content { background: white; margin: 5% auto; padding: 30px; width: 90%; max-width: 800px; border-radius: 20px; position: relative; line-height: 1.6; }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 35px; cursor: pointer; color: #666; }
+        .modal-content { background: white; margin: 5% auto; padding: 30px; width: 90%; max-width: 800px; border-radius: 20px; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Mera Digital Channel</h1>
-    <p>Videos aur AutoCAD Tutorials</p>
+    <p>AutoCAD Tutorials aur Useful Blogs</p>
 </header>
 
 <div id="content-grid"></div>
@@ -41,7 +38,6 @@
 </div>
 
 <script>
-    // Aapka fix CSV link
     const sheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv';
 
     function init() {
@@ -58,34 +54,38 @@
         grid.innerHTML = ''; 
         
         data.forEach((row, index) => {
-            // Hamari sheet ke columns: Topic, Description, Link, Blog_Text
-            if(row.Link && row.Link.trim() !== "") {
+            // Agar Link column mein kuch hai, toh card banao
+            if(row.Link && row.Link.trim() !== "" && row.Link !== "AVILIABLE SOON") {
                 let vId = "";
                 if(row.Link.includes('v=')) {
                     vId = row.Link.split('v=')[1].split('&')[0];
-                } else {
-                    vId = row.Link.split('/').pop().split('?')[0];
+                } else if(row.Link.includes('youtu.be/')) {
+                    vId = row.Link.split('youtu.be/')[1].split('?')[0];
                 }
                 
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `
+                
+                // Card ka HTML (Videos hamesha dikhengi)
+                let cardHTML = `
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/${vId}" allowfullscreen></iframe>
                     </div>
                     <div class="card-info">
                         <div class="card-title">${row.Topic || 'Nayi Video'}</div>
                         <div class="card-desc">${row.Description || ''}</div>
-                        ${(row.Blog_Text && row.Blog_Text.trim() !== "") ? `<button class="blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>` : ''}
-                    </div>
                 `;
+
+                // Button sirf tab dikhega jab Blog_Text mein kuch likha hoga
+                if(row.Blog_Text && row.Blog_Text.trim() !== "") {
+                    cardHTML += `<button class="blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>`;
+                }
+
+                cardHTML += `</div>`;
+                card.innerHTML = cardHTML;
                 grid.appendChild(card);
                 
-                // Blog data memory mein save
-                window['blog_' + index] = {
-                    t: row.Topic || 'Blog Post',
-                    c: row.Blog_Text || ''
-                };
+                window['blog_' + index] = { t: row.Topic, c: row.Blog_Text };
             }
         });
     }
@@ -94,13 +94,11 @@
         const b = window['blog_' + id];
         document.getElementById('modal-body').innerHTML = `<h2>${b.t}</h2><hr>${b.c}`;
         document.getElementById('blogModal').style.display = "block";
-        document.body.style.overflow = "hidden";
     }
 
-    function closeBlog() {
-        document.getElementById('blogModal').style.display = "none";
-        document.body.style.overflow = "auto";
-    }
+    function closeBlog() { document.getElementById('blogModal').style.display = "none"; }
 
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('blogModal')) close
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
