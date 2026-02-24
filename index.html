@@ -3,43 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - Ansuljhe Rahasya</title>
+    <title>EK MYSTERY - The Global Mystery Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --dark-red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; }
-        body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; }
-        header { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/black-paper.png'); padding: 40px 20px; text-align: center; border-bottom: 3px solid var(--dark-red); }
-        h1 { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--dark-red); margin: 0; text-shadow: 2px 2px 10px #000; }
+        :root { --dark-red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; --card-bg: #161616; --text-gray: #ccc; }
+        body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* Language Bar Style */
-        #google_translate_element { text-align: right; padding: 10px; background: #111; }
+        /* Language Bar */
+        #google_translate_element { text-align: right; background: #000; padding: 5px; border-bottom: 1px solid #222; }
 
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 40px; max-width: 1200px; margin: auto; }
-        .card { background: #161616; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--dark-red); box-shadow: 0 10px 30px rgba(139,0,0,0.3); }
+        header { background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); padding: 60px 20px; text-align: center; border-bottom: 4px solid var(--dark-red); }
+        h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; color: var(--dark-red); margin: 0; text-shadow: 3px 3px 15px rgba(0,0,0,1); letter-spacing: 5px; }
         
-        .thumbnail-box { position: relative; cursor: pointer; height: 180px; overflow: hidden; }
-        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: white; opacity: 0.7; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 40px; max-width: 1300px; margin: auto; }
+        
+        /* Card Style */
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #222; transition: all 0.4s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .card:hover { transform: translateY(-10px); border-color: var(--dark-red); box-shadow: 0 15px 40px rgba(139,0,0,0.4); }
+        
+        .thumbnail-box { position: relative; cursor: pointer; height: 200px; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; filter: grayscale(30%); }
+        .card:hover .thumbnail-box img { filter: grayscale(0%); transform: scale(1.05); }
+        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #fff; opacity: 0.8; text-shadow: 0 0 20px #000; }
 
-        .card-content { padding: 20px; }
-        h3 { color: var(--gold); margin-top: 0; font-family: 'Cinzel', serif; }
-        p { font-size: 0.95rem; color: #bbb; line-height: 1.5; height: 4.5em; overflow: hidden; }
+        .card-content { padding: 25px; }
+        h3 { color: var(--gold); margin: 0 0 15px 0; font-family: 'Cinzel', serif; font-size: 1.4rem; line-height: 1.2; }
+        .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; height: 3.2em; overflow: hidden; }
 
-        .btn-group { display: flex; gap: 10px; padding: 0 20px 20px; }
-        .btn { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; text-align: center; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .btn-group { display: flex; gap: 15px; padding: 0 25px 25px; }
+        .btn { flex: 1; padding: 12px; border-radius: 8px; cursor: pointer; text-decoration: none; text-align: center; font-weight: 600; font-size: 0.9rem; border: none; transition: 0.3s; }
         .yt-btn { background: var(--dark-red); color: white; }
-        .blog-btn { background: #333; color: var(--gold); }
-        .btn:hover { opacity: 0.8; }
+        .blog-btn { background: #222; color: var(--gold); border: 1px solid #444; }
+        .btn:hover { filter: brightness(1.2); letter-spacing: 1px; }
 
-        /* Modal / Blog Pop-up */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 80%; max-width: 800px; border-radius: 15px; border: 1px solid var(--dark-red); position: relative; }
-        .close { position: sticky; top: 0; float: right; font-size: 30px; color: #fff; cursor: pointer; }
-        #modal-body { line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
+        /* PROFESSIONAL BLOG MODAL */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(10px); overflow-y: auto; }
+        .modal-content { background: #111; margin: 40px auto; padding: 50px; width: 90%; max-width: 850px; border-radius: 20px; border: 1px solid #333; position: relative; box-shadow: 0 0 50px rgba(0,0,0,1); }
+        .close { position: absolute; right: 25px; top: 20px; font-size: 35px; color: #666; cursor: pointer; transition: 0.3s; }
+        .close:hover { color: var(--dark-red); }
+        
+        #modal-body { font-family: 'Roboto', sans-serif; color: #ddd; font-size: 1.15rem; line-height: 1.9; }
+        #modal-body h2 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 2.5rem; margin-bottom: 30px; border-bottom: 2px solid var(--dark-red); padding-bottom: 15px; }
+        #modal-body p { margin-bottom: 20px; letter-spacing: 0.3px; }
 
-        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--gold); }
+        @media (max-width: 600px) {
+            .modal-content { padding: 30px 20px; margin: 20px auto; }
+            #modal-body h2 { font-size: 1.8rem; }
+            h1 { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body>
@@ -48,11 +60,12 @@
 
     <header>
         <h1>EK MYSTERY</h1>
-        <p style="color: #888; letter-spacing: 2px;">DUNIYA KE ANSULJHE RAHASYA</p>
+        <p style="color: #888; letter-spacing: 3px; font-weight: 300;">EXPLORING THE WORLD'S GREATEST UNSOLVED ENIGMAS</p>
     </header>
 
-    <div id="loading">Rahasya khul rahe hain...</div>
-    <div class="container" id="mystery-container"></div>
+    <div id="mystery-container" class="container">
+        <p style="text-align:center; width:100%; color:var(--gold);">Gahrayi se rahasya nikal rahe hain...</p>
+    </div>
 
     <div id="blogModal" class="modal">
         <div class="modal-content">
@@ -62,90 +75,70 @@
     </div>
 
     <script>
-        // APNI GOOGLE SHEET KA URL YAHAN DALO
         const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOf007qR7Wl14vR3E-w6Wq9Y-G-mKkOfXl_o-pS7h2o02h_k6-eO1XkF-WbT-q09P6mP6/pub?output=csv';
 
-        let blogData = {};
+        let blogs = {};
 
-        function init() {
+        function loadData() {
             Papa.parse(sheetURL, {
                 download: true,
                 header: true,
                 complete: function(results) {
-                    const data = results.data;
-                    const container = document.getElementById('mystery-container');
                     let html = '';
-
-                    data.forEach((row, index) => {
+                    results.data.forEach((row, i) => {
                         if (row.Topic && row.Topic.trim() !== "") {
-                            let vidId = "";
-                            if(row.Link.includes('v=')) vidId = row.Link.split('v=')[1].split('&')[0];
-                            else if(row.Link.includes('youtu.be/')) vidId = row.Link.split('youtu.be/')[1].split('?')[0];
-                            else vidId = row.Link.split('/').pop().split('?')[0];
-
-                            const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
+                            let vidId = row.Link.includes('v=') ? row.Link.split('v=')[1].split('&')[0] : row.Link.split('/').pop().split('?')[0];
                             
-                            // Saving blog content
-                            blogData[index] = {
-                                title: row.Topic,
-                                content: row.Blog_Text || row.Description || "Jald hi update hoga..."
+                            blogs[i] = { 
+                                t: row.Topic, 
+                                c: row.Blog_Text || row.Description || "An investigation is underway. This mystery will be revealed soon..." 
                             };
 
                             html += `
                                 <div class="card">
-                                    <div class="thumbnail-box" onclick="window.open('${row.Link}', '_blank')">
-                                        <img src="${thumbUrl}" alt="Mystery">
+                                    <div class="thumbnail-box" onclick="window.open('${row.Link}','_blank')">
+                                        <img src="https://img.youtube.com/vi/${vidId}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${vidId}/mqdefault.jpg'">
                                         <div class="play-icon">▶</div>
                                     </div>
                                     <div class="card-content">
                                         <h3>${row.Topic}</h3>
-                                        <p>${row.Description || ''}</p>
+                                        <div class="card-desc">${row.Description || ''}</div>
                                     </div>
                                     <div class="btn-group">
                                         <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video</a>
-                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Read Blog</button>
+                                        <button class="btn blog-btn" onclick="openBlog(${i})">Read Case File</button>
                                     </div>
-                                </div>
-                            `;
+                                </div>`;
                         }
                     });
-                    document.getElementById('loading').style.display = 'none';
-                    container.innerHTML = html;
+                    document.getElementById('mystery-container').innerHTML = html;
                 }
             });
         }
 
-        function openBlog(id) {
-            const b = blogData[id];
-            document.getElementById('modal-body').innerHTML = `
-                <h2 style="color:var(--gold); font-family:'Cinzel', serif;">${b.title}</h2>
-                <hr style="border:0; border-top:1px solid #444;">
-                <div style="margin-top:20px;">${b.content}</div>
-            `;
+        function openBlog(i) {
+            const body = document.getElementById('modal-body');
+            // Hum blog content ko format kar rahe hain (newlines ko paragraphs mein)
+            const formattedContent = blogs[i].c.split('\n').map(p => p.trim() !== "" ? `<p>${p}</p>` : "").join('');
+            
+            body.innerHTML = `<h2>${blogs[i].t}</h2><div class="blog-text-content">${formattedContent}</div>`;
             document.getElementById('blogModal').style.display = "block";
             document.body.style.overflow = "hidden";
         }
 
-        function closeModal() {
-            document.getElementById('blogModal').style.display = "none";
+        function closeModal() { 
+            document.getElementById('blogModal').style.display = "none"; 
             document.body.style.overflow = "auto";
         }
 
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('blogModal')) closeModal();
-        }
+        window.onclick = function(e) { if(e.target.className == 'modal') closeModal(); }
 
-        // Google Translate Script
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'hi', 
-                includedLanguages: 'en,hi,ru,es,fr,de,ja,zh-CN',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'hi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
-
-        window.onload = init;
+        
+        window.onload = loadData;
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
