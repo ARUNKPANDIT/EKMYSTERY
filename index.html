@@ -3,35 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - Final Fix</title>
+    <title>EK MYSTERY - Global Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; }
+        :root { --red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; --card: #161616; }
         body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; }
-        header { background: #000; padding: 40px 20px; text-align: center; border-bottom: 3px solid var(--red); }
-        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--red); margin: 0; letter-spacing: 3px; }
+        header { background: #000; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--red); }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--red); margin: 0; letter-spacing: 4px; }
         #google_translate_element { text-align: right; background: #111; padding: 5px; }
-        
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 30px; max-width: 1200px; margin: auto; }
-        .card { background: #161616; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; }
-        .card:hover { border-color: var(--red); transform: translateY(-5px); }
-        .thumb { width: 100%; height: 180px; object-fit: cover; cursor: pointer; }
-        .card-content { padding: 15px; }
-        h3 { color: var(--gold); margin: 0; font-family: 'Cinzel', serif; font-size: 1.2rem; }
-        p { color: #bbb; font-size: 0.9rem; line-height: 1.5; margin-top: 10px; height: 3em; overflow: hidden; }
-        
-        .btn-group { display: flex; gap: 10px; padding: 15px; }
-        .btn { flex: 1; padding: 10px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 0.8rem; }
-        .yt-btn { background: var(--red); color: #fff; }
-        .blog-btn { background: #333; color: var(--gold); }
 
-        /* Professional Blog Modal */
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; backdrop-filter: blur(5px); }
+        /* Main Layout: Sidebar on Right */
+        .main-wrapper { display: flex; flex-wrap: wrap; max-width: 1400px; margin: auto; padding: 20px; gap: 20px; }
+        .content-area { flex: 3; min-width: 300px; }
+        .news-sidebar { flex: 1; min-width: 280px; background: #111; border-radius: 12px; border: 1px solid #333; padding: 15px; height: fit-content; position: sticky; top: 20px; }
+
+        .section-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.5rem; margin: 30px 0 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+        /* Video Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; }
+        .card:hover { border-color: var(--red); transform: translateY(-5px); }
+        .thumb { width: 100%; height: 160px; object-fit: cover; cursor: pointer; }
+        
+        /* Blog Items */
+        .blog-item { background: #1a1a1a; border-left: 4px solid var(--red); padding: 15px; border-radius: 5px; cursor: pointer; margin-bottom: 15px; transition: 0.2s; }
+        .blog-item:hover { background: #222; border-left-color: var(--gold); }
+        .blog-item h3 { margin: 0; color: var(--gold); font-size: 1.1rem; }
+
+        /* News Widget */
+        .news-title { color: var(--red); font-family: 'Cinzel', serif; font-size: 1.2rem; margin-top: 0; border-bottom: 2px solid var(--red); padding-bottom: 10px; text-align: center; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
         .modal-content { background: #111; margin: 5% auto; padding: 40px; width: 85%; max-width: 800px; border: 1px solid var(--red); border-radius: 15px; position: relative; }
         .close { position: absolute; right: 20px; top: 10px; font-size: 35px; cursor: pointer; color: #fff; }
-        #modal-body { line-height: 1.9; font-size: 1.15rem; white-space: pre-wrap; color: #ddd; text-align: left; }
-        #modal-body h2 { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2rem; border-bottom: 2px solid var(--red); padding-bottom: 10px; margin-top: 0; }
+        #modal-body { line-height: 1.9; font-size: 1.15rem; white-space: pre-wrap; color: #ddd; }
+
+        .btn-group { display: flex; gap: 10px; padding: 10px 15px 15px; }
+        .btn { flex: 1; padding: 8px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; cursor: pointer; border: none; font-size: 0.8rem; }
+        .yt-btn { background: var(--red); color: #fff; }
+        .read-btn { background: #333; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -40,11 +52,24 @@
 
 <header>
     <h1>EK MYSTERY</h1>
-    <p style="color:#666; font-size: 0.8rem; margin: 5px 0 0;">Duniya Ke Ansuljhe Rahasya</p>
 </header>
 
-<div id="mystery-container" class="container">
-    <p id="status" style="text-align:center; width:100%; color:var(--gold);">Rahasya Load Ho Rahe Hain...</p>
+<div class="main-wrapper">
+    <div class="content-area">
+        <h2 class="section-title">Mystery Video Files</h2>
+        <div id="video-container" class="grid"></div>
+
+        <h2 class="section-title">The Secret Archives (Blogs)</h2>
+        <div id="blog-only-container"></div>
+    </div>
+
+    <div class="news-sidebar">
+        <h2 class="news-title">Live Mystery News</h2>
+        <div id="rss-feed">
+            <script type="text/javascript" src="https://www.rssdog.com/index.php?url=https%3A%2F%2Fwww.sciencedaily.com%2Frss%2Ffossils_ruins%2Farchaeology.xml&mode=javascript&showonlytitle=1&maxitems=10&showdesc=0&border=0&target=_blank"></script>
+        </div>
+        <p style="font-size: 0.7rem; color: #444; margin-top: 20px; text-align: center;">News auto-updated by ScienceDaily</p>
+    </div>
 </div>
 
 <div id="blogModal" class="modal">
@@ -55,10 +80,9 @@
 </div>
 
 <script>
-    // FIXED LINK: pubhtml ko hatakar output=csv wala format use kiya hai
     const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv';
     
-    let blogs = {};
+    let allBlogs = {};
 
     function init() {
         Papa.parse(sheetURL, {
@@ -67,52 +91,43 @@
             skipEmptyLines: true,
             complete: function(results) {
                 let data = results.data;
-                let html = '';
+                let videoHtml = '';
+                let blogOnlyHtml = '';
                 
-                if(!data || data.length === 0) {
-                    document.getElementById('status').innerText = "Data nahi mila! Check Sheet columns.";
-                    return;
-                }
-
                 data.forEach((row, i) => {
                     if (row.Topic) {
-                        // YouTube ID Extraction
-                        let vidId = "";
-                        try {
-                            vidId = row.Link.includes('v=') ? row.Link.split('v=')[1].split('&')[0] : row.Link.split('/').pop().split('?')[0];
-                        } catch(e) { vidId = "dQw4w9WgXcQ"; }
+                        allBlogs[i] = { t: row.Topic, c: row.Blog_Text || row.Description || "Loading..." };
 
-                        // Storing blog content (Priority: Blog_Text > Blog > Description)
-                        blogs[i] = { 
-                            t: row.Topic, 
-                            c: row.Blog_Text || row.Blog || row.Description || "Iska blog jald hi update kiya jayega..." 
-                        };
-
-                        html += `
-                            <div class="card">
-                                <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg" class="thumb" onclick="window.open('${row.Link}')">
-                                <div class="card-content">
+                        if (row.Type && row.Type.toLowerCase() === 'video') {
+                            let vidId = row.Link.includes('v=') ? row.Link.split('v=')[1].split('&')[0] : row.Link.split('/').pop().split('?')[0];
+                            videoHtml += `
+                                <div class="card">
+                                    <img src="https://img.youtube.com/vi/${vidId}/mqdefault.jpg" class="thumb" onclick="window.open('${row.Link}')">
+                                    <div style="padding:10px;">
+                                        <h3 style="font-size: 1rem; color:var(--gold); margin:0;">${row.Topic}</h3>
+                                        <div class="btn-group">
+                                            <a href="${row.Link}" target="_blank" class="btn yt-btn">Video</a>
+                                            <button class="btn read-btn" onclick="openBlog(${i})">Read</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        } else {
+                            blogOnlyHtml += `
+                                <div class="blog-item" onclick="openBlog(${i})">
                                     <h3>${row.Topic}</h3>
-                                    <p>${row.Description || ''}</p>
-                                </div>
-                                <div class="btn-group">
-                                    <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video</a>
-                                    <button class="btn blog-btn" onclick="openBlog(${i})">Read Case File</button>
-                                </div>
-                            </div>`;
+                                    <p style="font-size:0.8rem; color:#666; margin-top:5px;">${row.Description || 'Click to read archive...'}</p>
+                                </div>`;
+                        }
                     }
                 });
-                document.getElementById('mystery-container').innerHTML = html;
-            },
-            error: function() {
-                document.getElementById('status').innerText = "Connection Error! Google Sheet link check karein.";
+                document.getElementById('video-container').innerHTML = videoHtml;
+                document.getElementById('blog-only-container').innerHTML = blogOnlyHtml;
             }
         });
     }
 
     function openBlog(i) {
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `<h2>${blogs[i].t}</h2><div>${blogs[i].c}</div>`;
+        document.getElementById('modal-body').innerHTML = `<h2 style="color:var(--gold); border-bottom:1px solid var(--red); padding-bottom:10px;">${allBlogs[i].t}</h2><div>${allBlogs[i].c}</div>`;
         document.getElementById('blogModal').style.display = "block";
         document.body.style.overflow = "hidden";
     }
@@ -121,8 +136,6 @@
         document.getElementById('blogModal').style.display = "none";
         document.body.style.overflow = "auto";
     }
-
-    window.onclick = function(e) { if(e.target.className == 'modal') closeModal(); }
 
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'hi'}, 'google_translate_element');
