@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - The Unknown World</title>
+    <title>EK MYSTERY - Explore the Unknown</title>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-20XEJMCB2R"></script>
     <script>
@@ -24,65 +24,72 @@
 
         header {
             background: rgba(0, 0, 0, 0.8);
-            padding: 50px 20px;
+            padding: 40px 20px;
             text-align: center;
             border-bottom: 3px solid #00d4ff;
         }
 
         header h1 {
             margin: 0;
-            font-size: 3rem;
+            font-size: 2.8rem;
             color: #00d4ff;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
 
         .container {
             max-width: 850px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 15px;
         }
 
         .blog-post {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 35px;
+            backdrop-filter: blur(8px);
+            padding: 30px;
             border-radius: 15px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .blog-post h2 {
             color: #00d4ff;
-            font-size: 2.2rem;
-            border-left: 6px solid #00d4ff;
+            font-size: 2rem;
+            margin-top: 0;
+            border-left: 5px solid #00d4ff;
             padding-left: 15px;
+        }
+
+        .description {
+            color: #ffcc00;
+            font-style: italic;
             margin-bottom: 20px;
+            font-size: 1.1rem;
         }
 
         .blog-content {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             line-height: 1.8;
-            color: #d1d1d1;
-            white-space: pre-wrap; /* Isse line breaks sahi dikhenge */
+            color: #cfcfcf;
+            white-space: pre-wrap; /* Breaks lines correctly */
         }
 
-        /* Video Styling */
+        /* YouTube Video Player */
         .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            padding-bottom: 56.25%;
             height: 0;
+            margin: 25px 0;
+            border-radius: 12px;
             overflow: hidden;
-            margin: 20px 0;
-            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
         }
 
         .video-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             border: 0;
         }
 
@@ -97,68 +104,62 @@
 
 <header>
     <h1>EK MYSTERY</h1>
-    <p style="color: #888;">Decoding the Unsolved Secrets</p>
 </header>
 
 <div class="container" id="blog-container">
     <p style="text-align: center;">Mysteries load ho rahi hain...</p>
 </div>
 
-<footer>
-    &copy; 2026 EK MYSTERY
-</footer>
+<footer>&copy; 2026 EK MYSTERY</footer>
 
 <script>
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    // Normal YouTube link ko Embed link mein badalne ka function
-    function linkToVideo(text) {
-        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-        return text.replace(youtubeRegex, (match, id) => {
-            return `<div class="video-container"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>`;
-        });
+    // Normal Link ko Embed Link mein badalne ke liye
+    function getYoutubeEmbed(url) {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
     }
 
-    async function getBlogs() {
+    async function loadData() {
         try {
-            const response = await fetch(SHEET_URL);
-            const rawData = await response.text();
-            const jsonData = JSON.parse(rawData.substring(47).slice(0, -2));
-            const rows = jsonData.table.rows;
+            const res = await fetch(G_URL);
+            const text = await res.text();
+            const json = JSON.parse(text.substr(47).slice(0, -2));
+            const rows = json.table.rows;
             
-            let finalHtml = '';
-            
+            let html = '';
             rows.forEach(row => {
-                const title = row.c[0] ? row.c[0].v : 'Untitled Mystery';
-                let content = row.c[1] ? row.c[1].v : 'Coming soon...';
-                
-                // Normal link ko Video mein badlo
-                content = linkToVideo(content);
-                
-                finalHtml += `
+                // Column A = c[0], B = c[1], C = c[2], D = c[3]
+                const topic = row.c[0] ? row.c[0].v : 'Untitled';
+                const desc = row.c[1] ? row.c[1].v : '';
+                const link = row.c[2] ? row.c[2].v : '';
+                const blogText = row.c[3] ? row.c[3].v : '';
+
+                const embedUrl = getYoutubeEmbed(link);
+                let videoHtml = embedUrl ? `<div class="video-container"><iframe src="${embedUrl}" allowfullscreen></iframe></div>` : '';
+
+                html += `
                     <div class="blog-post">
-                        <h2>${title}</h2>
-                        <div class="blog-content">${content}</div>
-                        <div id="disqus_thread"></div>
+                        <h2>${topic}</h2>
+                        <div class="description">${desc}</div>
+                        ${videoHtml}
+                        <div class="blog-content">${blogText}</div>
                     </div>
                 `;
             });
             
-            document.getElementById('blog-container').innerHTML = finalHtml;
-
-            // Disqus Load
-            var d = document, s = d.createElement('script');
-            s.src = 'https://ek-mystery.disqus.com/embed.js'; 
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-
-        } catch (err) {
-            document.getElementById('blog-container').innerHTML = `<p>Error Loading Data...</p>`;
+            document.getElementById('blog-container').innerHTML = html;
+        } catch (e) {
+            document.getElementById('blog-container').innerHTML = "<p style='text-align:center;'>Bhai, Data load nahi hua. Sheet ID ya Internet check kar.</p>";
+            console.error(e);
         }
     }
 
-    getBlogs();
+    loadData();
 </script>
 
 </body>
