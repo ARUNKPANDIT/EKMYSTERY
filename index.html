@@ -14,17 +14,42 @@
     </script>
 
     <style>
-        /* Google Translate Hover Fix */
+        /* --- GOOGLE TRANSLATE CLEANUP (BLOCKS HATANE KE LIYE) --- */
         .goog-te-banner-frame { display: none !important; } 
         body { top: 0 !important; }
-        .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
-        #goog-gt-tt, .goog-te-balloon-frame, .goog-te-tooltip, .goog-te-tooltip2 { display: none !important; visibility: hidden !important; }
+        
+        /* Ye line un safed blocks (highlights) ko khatam kar degi */
+        .goog-text-highlight { 
+            background: transparent !important; 
+            box-shadow: none !important; 
+            border: none !important; 
+        }
+        
+        /* Cursor popup band karne ke liye */
+        #goog-gt-tt, .goog-te-balloon-frame, .goog-te-tooltip, .goog-te-tooltip2 { 
+            display: none !important; 
+            visibility: hidden !important; 
+        }
 
-        body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding-bottom: 50px; }
-        header { background: #000; padding: 30px; text-align: center; border-bottom: 3px solid #00d4ff; }
+        /* --- MAIN WEBSITE STYLING --- */
+        body { 
+            background: #0f0f1a; 
+            color: #e0e0e0; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            padding-bottom: 50px; 
+        }
+        
+        header { 
+            background: #000; 
+            padding: 30px; 
+            text-align: center; 
+            border-bottom: 3px solid #00d4ff; 
+        }
+        
         h1 { color: #00d4ff; margin: 0; letter-spacing: 4px; text-transform: uppercase; }
         
-        #google_translate_element { text-align: center; margin: 15px 0; min-height: 40px; }
+        #google_translate_element { text-align: center; margin: 15px 0; }
 
         #reading-timer { 
             position: fixed; top: 10px; right: 10px; background: #00d4ff; 
@@ -33,33 +58,47 @@
         }
 
         .filter-container { text-align: center; margin: 20px 0; }
+        
         .filter-btn { 
             background: #1a1a2e; border: 1px solid #00d4ff; color: white; 
             padding: 8px 20px; margin: 5px; cursor: pointer; border-radius: 20px; 
         }
+        
         .filter-btn.active { background: #00d4ff; color: #000; font-weight: bold; }
 
         .container { max-width: 850px; margin: 0 auto; padding: 15px; }
+
         .post-card { 
-            background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; 
-            margin-bottom: 30px; border: 1px solid #333; 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 30px; 
+            border: 1px solid #333; 
         }
         
         .post-type { color: #00d4ff; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
-        h2 { margin: 10px 0; color: #fff; display: block; } /* Topic separate dikhega */
-        .description { color: #ffcc00; margin-bottom: 15px; font-style: italic; display: block; }
         
-        /* Formatting Fix: Para ki tarah mix nahi hoga */
+        /* Heading aur description ab block ban kar aayenge */
+        h2 { margin: 15px 0; color: #fff; display: block; width: 100%; }
+        .description { color: #ffcc00; margin-bottom: 15px; font-style: italic; display: block; width: 100%; }
+        
+        /* Blog Content Formatting */
         .blog-content { 
-            display: none; margin-top: 20px; padding-top: 20px; 
-            border-top: 1px solid #444; line-height: 1.8; 
-            white-space: pre-wrap; word-wrap: break-word;
-            color: #d1d1d1; font-size: 1.15rem;
+            display: none; 
+            margin-top: 20px; 
+            padding-top: 20px; 
+            border-top: 1px solid #444; 
+            line-height: 1.8; 
+            white-space: pre-wrap; 
+            color: #d1d1d1; 
+            font-size: 1.15rem;
+            text-align: left;
         }
 
+        /* Buttons & Reactions */
         .read-more-btn { 
             background: #00d4ff; color: #000; border: none; 
-            padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;
+            padding: 10px 20 font-weight: bold; border-radius: 5px; cursor: pointer;
         }
 
         .reactions { display: flex; gap: 10px; margin: 20px 0; padding: 15px 0; border-top: 1px solid #333; }
@@ -71,7 +110,9 @@
         footer { text-align: center; padding: 40px; color: #555; }
     </style>
 </head>
-<body class="notranslate-tooltips"> <div id="reading-timer">Reading: <span id="timer-val">00:00</span></div>
+<body>
+
+<div id="reading-timer">Reading: <span id="timer-val">00:00</span></div>
 
 <header><h1>EK MYSTERY</h1></header>
 
@@ -84,7 +125,7 @@
     <button class="filter-btn" onclick="filterData('News')">News</button>
 </div>
 
-<div class="container" id="post-container">Loading mysteries...</div>
+<div class="container" id="post-container">Loading...</div>
 
 <div id="universal-disqus" style="display:none; margin-top:20px;">
     <div id="disqus_thread"></div>
@@ -96,7 +137,6 @@
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'hi', 
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
     autoDisplay: false
   }, 'google_translate_element');
 }
