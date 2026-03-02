@@ -9,6 +9,8 @@
         /* CSS Cleanup - Sab kuch saaf dikhega */
         font, span, .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
         #goog-gt-tt, .goog-te-banner-frame { display: none !important; }
+        
+        /* Dark Theme for Site Body */
         body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; top: 0 !important; }
         
         header { background: #000; padding: 25px; text-align: center; border-bottom: 3px solid #00d4ff; }
@@ -28,21 +30,45 @@
         .description { color: #ffcc00; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; display: block; }
 
         /* WIKIPEDIA PREVIEW STYLE */
-        .special-word { color: #00d4ff; text-decoration: underline dotted; cursor: help; font-weight: bold; }
+        .special-word { color: #b30000 !important; text-decoration: underline dotted; cursor: help; font-weight: bold; }
         #wiki-preview {
             position: absolute; display: none; width: 280px; background: #fff; color: #333;
             padding: 15px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 10000; font-size: 0.9rem; line-height: 1.4; border: 2px solid #00d4ff;
         }
 
-        .blog-content { display: none; margin-top: 15px; line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* --- DHAMAKEDAAR BLOG VIEW (YAHAN EDIT KIYA HAI) --- */
+        .blog-content { 
+            display: none; 
+            margin-top: 20px; 
+            background: #ffffff; /* BLOG BACKGROUND: PURE WHITE */
+            color: #1a1a1a; /* TEXT COLOR: BLACK */
+            padding: 30px; 
+            border-radius: 8px; 
+            line-height: 1.8; 
+            font-size: 1.15rem; 
+            white-space: pre-wrap; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Blog ke andar ki headings ko highlight karne ke liye */
+        .blog-content b, .blog-content strong {
+            color: #b30000; /* Bold text ko RED kar diya */
+            font-size: 1.3rem;
+            display: block;
+            margin-top: 15px;
+            border-left: 4px solid #b30000;
+            padding-left: 10px;
+        }
+
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .read-more-btn:hover { background: #fff; transform: scale(1.02); }
         
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 8px; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        .reactions { margin: 20px 0; padding-top: 15px; border-top: 1px solid #333; display: flex; gap: 10px; }
-        .react-btn { background: #1c1c2e; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .reactions { margin: 20px 0; padding-top: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        .react-btn { background: #f0f0f0; border: 1px solid #ccc; color: #333; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
         footer { text-align: center; padding: 30px; color: #444; }
     </style>
@@ -62,9 +88,9 @@
     <button class="filter-btn" onclick="applyFilter('News', this)">News</button>
 </div>
 
-<div class="container" id="post-container">Data loading... (Agar ye na hate toh Sheet check karein)</div>
+<div class="container" id="post-container">Data loading...</div>
 
-<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
+<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #f9f9f9; border-radius: 8px; color: #333;">
     <div id="disqus_thread"></div>
 </div>
 
@@ -91,10 +117,8 @@ function googleTranslateElementInit() {
             const text = await res.text();
             const json = JSON.parse(text.substr(47).slice(0, -2));
             postsData = json.table.rows;
-            console.log("Raw Data Received:", postsData); // Console mein check karne ke liye
             applyFilter('all');
         } catch (e) { 
-            console.error("Data Load Error:", e);
             document.getElementById('post-container').innerHTML = "Bhai error aa gaya: " + e;
         }
     }
@@ -149,7 +173,6 @@ function googleTranslateElementInit() {
         clearInterval(timerInterval);
 
         postsData.forEach((row, index) => {
-            // Hum columns check kar rahe hain
             const topic = row.c[0] ? row.c[0].v : '';
             const desc = row.c[1] ? row.c[1].v : '';
             const link = row.c[2] ? row.c[2].v : '';
@@ -157,7 +180,6 @@ function googleTranslateElementInit() {
             const type = row.c[4] ? row.c[4].v : 'Blog';
             const status = row.c[5] ? row.c[5].v : '';
 
-            // Status Check
             if (status && status.toString().toLowerCase() === 'live') {
                 if (category === 'all' || type.toLowerCase() === category.toLowerCase()) {
                     let vId = link ? link.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/) : null;
@@ -185,7 +207,7 @@ function googleTranslateElementInit() {
                 }
             }
         });
-        container.innerHTML = html || "<p style='text-align:center;'>Bhai, Sheet ke Column F mein 'Live' likho!</p>";
+        container.innerHTML = html || "<p style='text-align:center;'>Bhai, Sheet mein 'Live' likho!</p>";
     }
 
     function toggleBlog(index, title) {
@@ -199,8 +221,6 @@ function googleTranslateElementInit() {
             document.getElementById('reading-timer').style.display = 'none';
             clearInterval(timerInterval); disqusHolder.style.display = "none";
         } else {
-            document.querySelectorAll('.blog-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.read-more-btn').forEach(el => el.innerText = 'Read Blog');
             content.style.display = "block"; btn.innerText = "Close Blog";
             startTimer();
             anchor.appendChild(disqusHolder); disqusHolder.style.display = "block";
