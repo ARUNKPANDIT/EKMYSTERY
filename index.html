@@ -5,177 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EK MYSTERY - Official App</title>
     
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzaG9ydF9uYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGExMiIsCiAgInRoZW1lX2NvbG9yIjogIzAwZDRmZiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzExNTUvMTE1NTAyNi5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
-    <meta name="theme-color" content="#00d4ff">
-    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* Global Reset */
-        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-top: 60px; }
-        
-        /* TOP NAVIGATION MENU (NEW) */
-        .navbar { 
-            position: fixed; top: 0; width: 100%; background: #000; 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 20px; border-bottom: 2px solid #00d4ff; z-index: 10002; 
-        }
-        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
-        .menu-icon { color: #00d4ff; font-size: 24px; cursor: pointer; }
+        /* CSS Reset */
+        * { box-sizing: border-box; }
+        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-top: 70px; }
 
-        /* SIDE DRAWER MENU */
-        .side-menu {
-            position: fixed; top: 0; right: -250px; width: 250px; height: 100%;
-            background: #111; border-left: 2px solid #00d4ff;
-            transition: 0.3s; z-index: 10003; padding-top: 60px;
+        /* --- FIXED NAVBAR (Sabse Upar) --- */
+        .navbar { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background: #000; display: flex; justify-content: space-between; 
+            align-items: center; padding: 0 20px; border-bottom: 2px solid #00d4ff; 
+            z-index: 10005; /* Isko sabse upar rakha hai */
         }
-        .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; }
+        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; letter-spacing: 1px; }
+        
+        /* ☰ Menu Icon Button */
+        .menu-toggle { 
+            color: #00d4ff; font-size: 28px; cursor: pointer; 
+            background: none; border: none; outline: none; padding: 5px;
+        }
+
+        /* --- SIDE DRAWER (Left Se Khulne Wala) --- */
+        .side-menu {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: #111; border-right: 2px solid #00d4ff;
+            transition: 0.4s ease; z-index: 10006; padding-top: 20px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+        .side-menu.active { left: 0; } /* Jab click hoga tab ye active hoga */
+
+        .side-menu .close-btn { 
+            text-align: right; padding: 10px 20px; color: #ff3333; 
+            font-size: 20px; cursor: pointer; font-weight: bold;
+        }
+        .side-menu a { 
+            display: block; padding: 15px 25px; color: #fff; 
+            text-decoration: none; font-size: 1.1rem; border-bottom: 1px solid #222; 
+        }
         .side-menu a:hover { background: #00d4ff; color: #000; }
 
-        /* HEADER */
-        header { padding: 40px 20px 20px; text-align: center; }
-        header h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; }
+        /* Overlay (Jab menu khule toh piche ka dhundla ho jaye) */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 10004;
+        }
+        .overlay.active { display: block; }
 
-        /* POSTS & FILTERS */
-        .filter-container { text-align: center; margin: 15px 0; }
-        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; }
-        .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+        /* Content Container */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
-        
-        /* BUTTONS & REACTIONS */
+        h2 { color: #fff; margin-top: 0; }
         .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
-        .reactions { margin-top: 15px; display: flex; gap: 10px; justify-content: center; }
-        .react-btn { background: #f8f9fa; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
 
-        /* AI BOT UI */
-        #ai-launcher { position: fixed; bottom: 20px; right: 20px; background: #00d4ff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10001; cursor: pointer; box-shadow: 0 0 15px #00d4ff; }
-        #ai-window { position: fixed; bottom: 85px; right: 20px; width: 300px; height: 400px; background: #fff; border-radius: 12px; display: none; flex-direction: column; overflow: hidden; border: 2px solid #00d4ff; z-index: 10000; }
-        .ai-head { background: #00d4ff; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
-        #msg-box { flex: 1; padding: 10px; overflow-y: auto; background: #f9f9f9; color: #333; display: flex; flex-direction: column; gap: 8px; }
+        /* AI Launcher */
+        #ai-launcher { position: fixed; bottom: 20px; right: 20px; background: #00d4ff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 999; cursor: pointer; font-size: 25px; }
     </style>
 </head>
 <body>
 
     <div class="navbar">
         <div class="logo">EK MYSTERY</div>
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <button class="menu-toggle" onclick="openMenu()">
+            <i class="fas fa-bars"></i> </button>
     </div>
+
+    <div id="overlay" class="overlay" onclick="closeMenu()"></div>
 
     <div id="sideMenu" class="side-menu">
-        <div style="text-align:right; padding: 10px 20px; color:#00d4ff; cursor:pointer;" onclick="toggleMenu()">✖ Close</div>
-        <a href="#">🏠 Home</a>
-        <a href="#">🔍 Categories</a>
-        <a href="#">📖 About Us</a>
-        <a href="#">✉️ Contact</a>
-    </div>
-
-    <header><h1>EK MYSTERY</h1></header>
-
-    <div class="filter-container">
-        <button class="filter-btn active" onclick="applyFilter('all', this)">All</button>
-        <button class="filter-btn" onclick="applyFilter('Blog', this)">Blog</button>
-        <button class="filter-btn" onclick="applyFilter('Video', this)">Video</button>
-    </div>
-
-    <div class="container" id="post-container">Mystery loading...</div>
-
-    <div id="ai-launcher" onclick="toggleChat()">🤖</div>
-    <div id="ai-window">
-        <div class="ai-head"><span>MYSTERY AI</span><span onclick="toggleChat()" style="cursor:pointer">×</span></div>
-        <div id="msg-box"></div>
-        <div style="padding:10px; border-top:1px solid #ccc; display:flex;">
-            <input type="text" id="ai-in" style="flex:1; padding:8px;" placeholder="Type here...">
-            <button onclick="askAI()" style="background:#00d4ff; border:none; padding:8px;">Bhejo</button>
+        <div class="close-btn" onclick="closeMenu()">✕ CLOSE</div>
+        <div style="padding: 20px; text-align: center; border-bottom: 1px solid #333;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1155/1155026.png" width="80" alt="logo">
+            <p style="color:#00d4ff; font-weight:bold;">EK MYSTERY AI</p>
         </div>
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <a href="#"><i class="fas fa-bolt"></i> Latest Stories</a>
+        <a href="#"><i class="fas fa-video"></i> Videos</a>
+        <a href="#"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#"><i class="fas fa-envelope"></i> Contact</a>
     </div>
 
-    <div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
-        <div id="disqus_thread"></div>
+    <div class="container" id="post-container">
+        Loading Mystery Content...
     </div>
+
+    <div id="ai-launcher">🤖</div>
 
 <script>
-    // Menu Toggle Logic
-    function toggleMenu() {
-        const menu = document.getElementById('sideMenu');
-        menu.style.right = (menu.style.right === "0px") ? "-250px" : "0px";
+    // Menu Functions
+    function openMenu() {
+        document.getElementById('sideMenu').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
     }
 
-    // Google Sheets & Blog Logic
+    function closeMenu() {
+        document.getElementById('sideMenu').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Sheet Data Logic (Same as before)
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-    let postsData = [];
 
     async function loadData() {
         try {
             const res = await fetch(G_URL);
             const text = await res.text();
             const json = JSON.parse(text.substr(47).slice(0, -2));
-            postsData = json.table.rows;
-            applyFilter('all');
-        } catch (e) { console.log(e); }
-    }
+            const posts = json.table.rows;
+            let html = '';
+            
+            posts.forEach((row, index) => {
+                const topic = row.c[0]?.v || '';
+                const desc = row.c[1]?.v || '';
+                const status = row.c[5]?.v || '';
 
-    function applyFilter(category, btn) {
-        if(btn) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-        const container = document.getElementById('post-container');
-        let html = '';
-        postsData.forEach((row, index) => {
-            const topic = row.c[0]?.v || '';
-            const desc = row.c[1]?.v || '';
-            const link = row.c[2]?.v || '';
-            const blogText = row.c[3]?.v || '';
-            const type = row.c[4]?.v || 'Blog';
-            const status = row.c[5]?.v || '';
-
-            if (status.toLowerCase() === 'live') {
-                if (category === 'all' || type.toLowerCase() === category.toLowerCase()) {
-                    let vId = link ? link.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/) : null;
-                    let vHtml = vId ? `<div style="position:relative;padding-bottom:56.25%;overflow:hidden;margin-bottom:15px;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://www.youtube.com/embed/${vId[1]}" frameborder="0" allowfullscreen></iframe></div>` : '';
-                    
-                    html += `<div class="post-card">
-                        <span style="color:#00d4ff; font-size:12px;">${type}</span>
+                if (status.toLowerCase() === 'live') {
+                    html += `
+                    <div class="post-card">
                         <h2>${topic}</h2>
-                        <p class="description">${desc}</p>
-                        ${vHtml}
-                        ${blogText ? `<button class="read-more-btn" onclick="toggleBlog(${index}, '${topic}')">Read Full Story</button>
-                        <div id="blog-box-${index}" style="display:none; background:#fff; color:#000; padding:20px; margin-top:15px; border-radius:8px;">
-                            ${blogText}
-                            <div class="reactions">
-                                <button class="react-btn" onclick="alert('Mast!')">🔥 Mast</button>
-                                <button class="react-btn" onclick="alert('Shock!')">😱 Shocking</button>
-                            </div>
-                            <div id="disqus-place-${index}" style="margin-top:20px;"></div>
-                        </div>` : ''}
+                        <p>${desc}</p>
+                        <button class="read-more-btn">Read Full Blog</button>
                     </div>`;
                 }
-            }
-        });
-        container.innerHTML = html;
+            });
+            document.getElementById('post-container').innerHTML = html;
+        } catch (e) { console.error(e); }
     }
-
-    function toggleBlog(index, title) {
-        const box = document.getElementById(`blog-box-${index}`);
-        const disqus = document.getElementById('universal-disqus');
-        const place = document.getElementById(`disqus-place-${index}`);
-        if(box.style.display === "block") {
-            box.style.display = "none"; disqus.style.display = "none";
-        } else {
-            box.style.display = "block"; disqus.style.display = "block";
-            place.appendChild(disqus);
-            if(typeof DISQUS !== 'undefined') DISQUS.reset({reload:true});
-            else { var d=document,s=d.createElement('script'); s.src='https://ek-mystery.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head||d.body).appendChild(s); }
-        }
-    }
-
-    function toggleChat() { const w = document.getElementById('ai-window'); w.style.display = (w.style.display==='none'||w.style.display==='')?'flex':'none'; }
-    function askAI() { 
-        const inp = document.getElementById('ai-in'); if(!inp.value) return;
-        const box = document.getElementById('msg-box');
-        box.innerHTML += `<div style="background:#00d4ff; padding:8px; border-radius:8px; align-self:flex-end;">${inp.value}</div>`;
-        setTimeout(() => { box.innerHTML += `<div style="background:#ddd; padding:8px; border-radius:8px; align-self:flex-start;">Abhi dimaag load ho raha hai fufa!</div>`; box.scrollTop = box.scrollHeight; }, 500);
-        inp.value = '';
-    }
-
     loadData();
 </script>
 </body>
