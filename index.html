@@ -30,30 +30,27 @@
         }
         .side-menu.active { left: 0; }
         .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; cursor: pointer; }
+        .side-menu a i { width: 30px; color: #00d4ff; }
         .side-menu a:hover { background: #00d4ff; color: #000; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 10004; }
         .overlay.active { display: block; }
 
-        /* Content Cards */
+        /* Install Button in Menu */
+        #installAppBox { padding: 20px; display: none; }
+        .install-btn { 
+            background: #00d4ff; color: #000; border: none; padding: 12px; 
+            width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* Content */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
-        .post-card h2 { color: #fff; margin: 10px 0; font-size: 1.3rem; }
-        .description { color: #ffcc00; margin-bottom: 15px; display: block; font-size: 0.95rem; }
-
-        /* Video Container */
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 15px; background: #000; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 15px; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-        /* Blog Content */
-        .blog-content { 
-            display: none; background: #ffffff; color: #1a1a1a; padding: 25px; 
-            border-radius: 8px; line-height: 1.7; margin-top: 15px; white-space: pre-wrap;
-        }
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        
-        /* Install Button */
-        #installBtn { color: #00d4ff !important; font-weight: bold; border: 2px solid #00d4ff !important; margin: 10px; border-radius: 8px; text-align: center; }
+        .blog-content { display: none; background: #fff; color: #1a1a1a; padding: 20px; border-radius: 8px; margin-top: 15px; white-space: pre-wrap; }
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -67,108 +64,111 @@
 
     <div id="sideMenu" class="side-menu">
         <div style="text-align:right; padding:10px 20px; color:red; cursor:pointer;" onclick="closeMenu()">✕ CLOSE</div>
+        
         <a onclick="filterBy('all')"><i class="fas fa-home"></i> Home</a>
-        <a onclick="filterBy('Blog')"><i class="fas fa-book-open"></i> Latest Blogs</a>
+        <a onclick="filterBy('Blog')"><i class="fas fa-book-open"></i> Mystery Blogs</a>
         <a onclick="filterBy('Video')"><i class="fas fa-play-circle"></i> Videos</a>
-        <a onclick="filterBy('News')"><i class="fas fa-newspaper"></i> Mystery News</a>
-        <a id="installBtn" style="display:none;"><i class="fas fa-download"></i> INSTALL APP</a>
+        
+        <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
+        
+        <a href="https://wa.me/91XXXXXXXXXX" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+        <a href="mailto:contact@ekmystery.com"><i class="fas fa-envelope"></i> Email Support</a>
+        
+        <div id="installAppBox">
+            <button class="install-btn" onclick="installApp()">📲 INSTALL APP</button>
+        </div>
     </div>
 
-    <div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
+    <div class="container" id="post-container">Mystery Load Ho Rahi Hai...</div>
 
 <script>
-    // PWA Service Worker
+    // PWA Service Worker (Needed for Add to Home Screen)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsgfSk7');
     }
 
-    // Menu Controls
+    // ☰ Menu Logic
     function openMenu() { document.getElementById('sideMenu').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
     function closeMenu() { document.getElementById('sideMenu').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
 
-    // Install Prompt
+    // 📲 Add to Home Screen Logic
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault(); deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
-    });
-    document.getElementById('installBtn').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            document.getElementById('installBtn').style.display = 'none';
-        }
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installAppBox').style.display = 'block';
     });
 
-    // Data Handling
+    async function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User installed the app');
+            }
+            deferredPrompt = null;
+            document.getElementById('installAppBox').style.display = 'none';
+        }
+    }
+
+    // 📊 Sheet Data Handling
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-    let allPosts = [];
+    let allData = [];
 
     async function loadData() {
         try {
             const res = await fetch(G_URL);
             const text = await res.text();
             const json = JSON.parse(text.substr(47).slice(0, -2));
-            allPosts = json.table.rows;
+            allData = json.table.rows;
             displayPosts('all');
-        } catch (e) { document.getElementById('post-container').innerHTML = "Bhai error: " + e; }
+        } catch (e) { console.error(e); }
     }
 
     function filterBy(type) { displayPosts(type); closeMenu(); }
 
-    function displayPosts(filterType) {
+    function displayPosts(filter) {
         let html = '';
-        allPosts.forEach((row, index) => {
+        allData.forEach((row, index) => {
             const topic = row.c[0]?.v || '';
             const desc = row.c[1]?.v || '';
-            const videoLink = row.c[2]?.v || '';
-            const blogText = row.c[3]?.v || '';
-            const category = row.c[4]?.v || 'Blog';
+            const video = row.c[2]?.v || '';
+            const blog = row.c[3]?.v || '';
+            const type = row.c[4]?.v || 'Blog';
             const status = row.c[5]?.v || '';
 
             if (status.toLowerCase() === 'live') {
-                if (filterType === 'all' || category.toLowerCase() === filterType.toLowerCase()) {
-                    
-                    // Video Logic
-                    let videoHtml = '';
-                    if (videoLink) {
-                        let vId = videoLink.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/);
-                        if (vId) videoHtml = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>`;
+                if (filter === 'all' || type.toLowerCase() === filter.toLowerCase()) {
+                    let vHtml = '';
+                    if (video) {
+                        let vId = video.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/);
+                        if (vId) vHtml = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>`;
                     }
-
-                    // Blog Logic
-                    let blogHtml = blogText ? `
-                        <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button>
-                        <div id="blog-box-${index}" class="blog-content">${blogText}</div>
-                    ` : '';
-
+                    
                     html += `
                         <div class="post-card">
-                            <span style="color:#00d4ff; font-size:11px; font-weight:bold; text-transform:uppercase;">${category}</span>
+                            <span style="color:#00d4ff; font-size:11px; font-weight:bold;">${type.toUpperCase()}</span>
                             <h2>${topic}</h2>
-                            <span class="description">${desc}</span>
-                            ${videoHtml}
-                            ${blogHtml}
+                            <p>${desc}</p>
+                            ${vHtml}
+                            ${blog ? `
+                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button>
+                                <div id="blog-box-${index}" class="blog-content">${blog}</div>
+                            ` : ''}
                         </div>
                     `;
                 }
             }
         });
-        document.getElementById('post-container').innerHTML = html || "<p style='text-align:center;'>Bhai yahan abhi kuch nahi hai!</p>";
+        document.getElementById('post-container').innerHTML = html;
     }
 
-    function toggleBlog(index) {
-        const box = document.getElementById(`blog-box-${index}`);
-        const btn = document.getElementById(`btn-${index}`);
-        if (box.style.display === "block") {
-            box.style.display = "none";
-            btn.innerText = "Read Full Mystery";
-        } else {
-            box.style.display = "block";
-            btn.innerText = "Close Mystery";
-        }
+    function toggleBlog(i) {
+        const box = document.getElementById(`blog-box-${i}`);
+        const btn = document.getElementById(`btn-${i}`);
+        if(box.style.display === "block") { box.style.display = "none"; btn.innerText = "Read Full Mystery"; }
+        else { box.style.display = "block"; btn.innerText = "Close Mystery"; }
     }
 
     loadData();
